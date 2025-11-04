@@ -24,14 +24,14 @@ h1 {
   display: block;
 }
 
-/* === 🟣 BOUTONS AU CENTRE === */
+/* === BOUTONS CENTRÉS === */
 .button-column {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: fixed;
-  bottom: 10%;
+  top: 65%;
   left: 50%;
   transform: translateX(-50%);
   gap: 15px;
@@ -54,7 +54,7 @@ h1 {
   background: linear-gradient(90deg, #ffe4b5, #ffd1dc, #b5e5cf);
 }
 
-/* === 🎨 ZONE DE DESSIN === */
+/* === ZONE DE DESSIN === */
 #drawArea {
   position: fixed;
   top: 0;
