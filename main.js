@@ -1,3 +1,4 @@
+// === 🌈 THREE.JS SETUP ===
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.set(0, 2, 5);
@@ -10,18 +11,17 @@ const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
 light.position.set(0, 20, 0);
 scene.add(light);
 
-let mixer, lion, currentTexture;
+let mixer, lion;
 
-// Charger le lion animé
+// === Charger le lion ===
 const loader = new THREE.GLTFLoader();
 loader.load('lion.glb', (gltf) => {
   lion = gltf.scene;
   scene.add(lion);
   mixer = new THREE.AnimationMixer(lion);
   gltf.animations.forEach((clip) => mixer.clipAction(clip).play());
-}, undefined, console.error);
+}, undefined, (err) => console.error(err));
 
-// Animation boucle
 const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
@@ -30,17 +30,51 @@ function animate() {
 }
 animate();
 
-// Adapter la taille à l’écran
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// === 🎨 DESSIN SUR L'ÉCRAN ===
+// === 📸 Photo & Fichier ===
+document.getElementById('photoBtn').onclick = () => document.getElementById('photoInput').click();
+document.getElementById('fileBtn').onclick = () => document.getElementById('fileInput').click();
+
+document.getElementById('photoInput').onchange = handleImage;
+document.getElementById('fileInput').onchange = handleImage;
+
+function handleImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const texture = new THREE.TextureLoader().load(event.target.result);
+    applyTextureToLion(texture);
+  };
+  reader.readAsDataURL(file);
+}
+
+function applyTextureToLion(texture) {
+  if (!lion) return;
+  lion.traverse((child) => {
+    if (child.isMesh) {
+      child.material.map = texture;
+      child.material.needsUpdate = true;
+    }
+  });
+}
+
+// === 🎨 DESSIN ===
+const drawArea = document.getElementById('drawArea');
 const drawCanvas = document.getElementById('drawCanvas');
 const ctx = drawCanvas.getContext('2d');
 let drawing = false;
+
+function resizeCanvas() {
+  drawCanvas.width = drawCanvas.clientWidth;
+  drawCanvas.height = drawCanvas.clientHeight;
+}
+resizeCanvas();
 
 function startDraw(e) {
   drawing = true;
@@ -52,16 +86,24 @@ function endDraw() {
 }
 function draw(e) {
   if (!drawing) return;
-  ctx.lineWidth = 12;
+  ctx.lineWidth = 15;
   ctx.lineCap = 'round';
   ctx.strokeStyle = '#ff66b3';
-  const x = e.touches ? e.touches[0].clientX : e.clientX;
-  const y = e.touches ? e.touches[0].clientY : e.clientY;
+  const rect = drawCanvas.getBoundingClientRect();
+  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
   ctx.lineTo(x, y);
   ctx.stroke();
   ctx.beginPath();
   ctx.moveTo(x, y);
 }
+
+// 🎨 activer le mode dessin
+document.getElementById('drawBtn').onclick = () => {
+  drawArea.style.display = 'flex';
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+};
 
 drawCanvas.addEventListener('mousedown', startDraw);
 drawCanvas.addEventListener('mouseup', endDraw);
@@ -70,50 +112,15 @@ drawCanvas.addEventListener('touchstart', startDraw);
 drawCanvas.addEventListener('touchend', endDraw);
 drawCanvas.addEventListener('touchmove', draw);
 
-// === 📸 BOUTONS ===
-const photoInput = document.getElementById('photoInput');
-const fileInput = document.getElementById('fileInput');
-
-document.getElementById('drawBtn').onclick = () => {
-  drawCanvas.style.display = 'block';
-};
-
-document.getElementById('photoBtn').onclick = () => photoInput.click();
-document.getElementById('fileBtn').onclick = () => fileInput.click();
-
-photoInput.onchange = handleImage;
-fileInput.onchange = handleImage;
-
-// === 🧩 FONCTION : appliquer la texture ===
-function handleImage(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    const texture = new THREE.TextureLoader().load(event.target.result);
-    currentTexture = texture;
-    applyTextureToLion(texture);
-  };
-  reader.readAsDataURL(file);
-}
-
-// === 🦁 appliquer une texture sur le lion ===
-function applyTextureToLion(texture) {
-  if (!lion) return;
-  lion.traverse((child) => {
-    if (child.isMesh) {
-      child.material.map = texture;
-      child.material.needsUpdate = true;
-    }
-  });
-}
-
-// === 🖼️ Enregistrer le dessin et appliquer sur le lion ===
-function finishDrawing() {
+// ✅ valider ou 🧽 effacer
+document.getElementById('validateDraw').onclick = () => {
   const dataURL = drawCanvas.toDataURL();
   const texture = new THREE.TextureLoader().load(dataURL);
   applyTextureToLion(texture);
-  drawCanvas.style.display = 'none';
-}
-
-drawCanvas.addEventListener('dblclick', finishDrawing);
+  drawArea.style.display = 'none';
+};
+document.getElementById('clearDraw').onclick = () => {
+  ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+};
