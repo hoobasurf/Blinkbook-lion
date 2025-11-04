@@ -13,16 +13,18 @@
     <canvas id="scene"></canvas>
   </div>
 
+  <!-- Inputs cachés pour photo/fichier -->
+  <input id="photoInput" type="file" accept="image/*" capture="environment" hidden>
+  <input id="fileInput" type="file" accept="image/*" hidden>
+
+  <!-- Boutons centrés en colonne -->
   <div class="button-column">
     <button id="photoBtn">📸 Prendre une photo</button>
-    <input id="photoInput" type="file" accept="image/*" capture="environment" hidden />
-
     <button id="fileBtn">📂 Choisir une image</button>
-    <input id="fileInput" type="file" accept="image/*" hidden />
-
     <button id="drawBtn">🎨 Dessiner</button>
   </div>
 
+  <!-- Zone de dessin -->
   <div id="drawArea">
     <canvas id="drawCanvas"></canvas>
     <div class="draw-buttons">
