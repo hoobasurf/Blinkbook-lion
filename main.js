@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let mixer, lion;
 
-  // Charger le lion
+  // Charger le lion depuis /assets
   const loader = new THREE.GLTFLoader();
-  loader.load('lion.glb', (gltf) => {
+  loader.load('assets/lion.glb', (gltf) => {
     lion = gltf.scene;
     scene.add(lion);
     mixer = new THREE.AnimationMixer(lion);
