@@ -1,92 +1,63 @@
 body {
   margin: 0;
-  font-family: "Comic Sans MS", cursive;
-  background: linear-gradient(135deg, #fbeaff, #e6f9ff, #fff8dc);
-  overflow: hidden;
+  font-family: "Comic Sans MS", sans-serif;
+  background: linear-gradient(180deg, #ffe6f2, #e6f7ff, #fff0cc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#app {
   text-align: center;
+  width: 100%;
+  max-width: 500px;
 }
 
 h1 {
-  color: #ff66b3;
-  text-shadow: 2px 2px 0 #fff;
-  padding: 10px;
+  color: #ff80ab;
   font-size: 2em;
+  margin-bottom: 20px;
 }
 
-#canvas-container {
-  width: 100vw;
-  height: 60vh;
-}
-
-#scene {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* === BOUTONS CENTRÉS === */
-.button-column {
+#buttonContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 65%;
-  left: 50%;
-  transform: translateX(-50%);
   gap: 15px;
+  margin-bottom: 20px;
 }
 
-.button-column button {
-  width: 240px;
-  background: linear-gradient(90deg, #ffd1dc, #b5e5cf, #ffe4b5);
+button {
+  background: linear-gradient(90deg, #ffb6c1, #a7ffeb, #ffd180);
   border: none;
-  border-radius: 50px;
-  padding: 15px 25px;
+  border-radius: 12px;
+  padding: 12px;
   font-size: 1.2em;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-  color: #444;
-  transition: transform 0.2s, background 0.3s;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
 }
 
-.button-column button:hover {
-  transform: scale(1.1);
-  background: linear-gradient(90deg, #ffe4b5, #ffd1dc, #b5e5cf);
+button:hover {
+  transform: scale(1.05);
 }
 
-/* === ZONE DE DESSIN === */
-#drawArea {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255, 255, 255, 0.9);
+#viewer {
+  width: 100%;
+  height: 300px;
+}
+
+.hidden {
   display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 #drawCanvas {
-  border: 3px solid #ffb6c1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: white;
+  z-index: 10;
   touch-action: none;
-  width: 85%;
-  height: 60%;
-}
-
-.draw-buttons {
-  margin-top: 20px;
-  display: flex;
-  gap: 15px;
-}
-
-.draw-buttons button {
-  background: linear-gradient(90deg, #ffd1dc, #b5e5cf, #ffe4b5);
-  border: none;
-  border-radius: 30px;
-  padding: 12px 20px;
-  font-size: 1em;
-  color: #444;
 }
