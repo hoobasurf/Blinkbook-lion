@@ -3,39 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🦁 Mon Lion Magique 🌈</title>
+  <title>Lion Magique 🦁</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>🦁 Mon Lion Magique 🌈</h1>
-
-  <div id="canvas-container">
-    <canvas id="scene"></canvas>
-  </div>
-
-  <!-- Inputs cachés pour photo/fichier -->
-  <input id="photoInput" type="file" accept="image/*" hidden>
-  <input id="fileInput" type="file" accept="image/*" hidden>
-
-  <!-- Boutons centrés en colonne -->
-  <div class="button-column">
-    <button id="photoBtn">📸 Prendre une photo</button>
-    <button id="fileBtn">📂 Choisir une image</button>
-    <button id="drawBtn">🎨 Dessiner</button>
-  </div>
-
-  <!-- Zone de dessin -->
-  <div id="drawArea">
-    <canvas id="drawCanvas"></canvas>
-    <div class="draw-buttons">
-      <button id="validateDraw">✅ Valider mon dessin</button>
-      <button id="clearDraw">🧽 Effacer</button>
+  <div id="app">
+    <h1>🦁 Mon Lion Magique</h1>
+    <div id="buttonContainer">
+      <button id="photoBtn">📸 Photo</button>
+      <button id="fileBtn">🖼️ Fichier</button>
+      <button id="drawBtn">🎨 Dessiner</button>
     </div>
+    <div id="viewer"></div>
+    <canvas id="drawCanvas" class="hidden"></canvas>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.164.0/examples/js/loaders/GLTFLoader.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/examples/js/loaders/GLTFLoader.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
