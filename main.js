@@ -1,27 +1,46 @@
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.156.1/build/three.module.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.156.1/examples/jsm/loaders/GLTFLoader.js";
 
+// Sélecteurs
 const viewer = document.getElementById("viewer");
+const canvas = document.getElementById("drawCanvas");
+const ctx = canvas.getContext("2d");
+
+// Création de la scène
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(60, viewer.clientWidth / viewer.clientHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(
+  60,
+  viewer.clientWidth / viewer.clientHeight,
+  0.1,
+  1000
+);
+camera.position.z = 5;
+
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(viewer.clientWidth, viewer.clientHeight);
 viewer.appendChild(renderer.domElement);
 
+// Lumière
 const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
 scene.add(light);
 
+// Chargement du modèle
 let mixer;
 const loader = new GLTFLoader();
-loader.load("assets/lion.glb", (gltf) => {
-  const model = gltf.scene;
-  model.scale.set(2, 2, 2);
-  scene.add(model);
-  mixer = new THREE.AnimationMixer(model);
-  gltf.animations.forEach((clip) => mixer.clipAction(clip).play());
-}, undefined, console.error);
+loader.load(
+  "assets/lion.glb",
+  (gltf) => {
+    const model = gltf.scene;
+    model.scale.set(2, 2, 2);
+    scene.add(model);
+    mixer = new THREE.AnimationMixer(model);
+    gltf.animations.forEach((clip) => mixer.clipAction(clip).play());
+  },
+  undefined,
+  (error) => console.error("Erreur de chargement :", error)
+);
 
-camera.position.z = 5;
+// Animation
 function animate() {
   requestAnimationFrame(animate);
   if (mixer) mixer.update(0.01);
@@ -29,13 +48,18 @@ function animate() {
 }
 animate();
 
-// Boutons
-document.getElementById("photoBtn").addEventListener("click", () => alert("📸 Fonction photo à venir !"));
-document.getElementById("fileBtn").addEventListener("click", () => alert("🖼️ Import image à venir !"));
+// 🎨 Gestion des boutons
+document.getElementById("photoBtn").addEventListener("click", () => {
+  alert("📸 Fonction photo à venir !");
+});
+
+document.getElementById("fileBtn").addEventListener("click", () => {
+  alert("🖼️ Import d'image à venir !");
+});
+
 document.getElementById("drawBtn").addEventListener("click", startDrawing);
 
-const canvas = document.getElementById("drawCanvas");
-const ctx = canvas.getContext("2d");
+// 🖌️ Dessin sur canvas
 let drawing = false;
 
 function startDrawing() {
@@ -44,6 +68,7 @@ function startDrawing() {
   canvas.height = window.innerHeight;
   ctx.lineWidth = 5;
   ctx.strokeStyle = "#000000";
+  ctx.lineCap = "round";
 }
 
 canvas.addEventListener("pointerdown", (e) => {
@@ -51,11 +76,13 @@ canvas.addEventListener("pointerdown", (e) => {
   ctx.beginPath();
   ctx.moveTo(e.clientX, e.clientY);
 });
+
 canvas.addEventListener("pointermove", (e) => {
   if (!drawing) return;
   ctx.lineTo(e.clientX, e.clientY);
   ctx.stroke();
 });
+
 canvas.addEventListener("pointerup", () => {
   drawing = false;
 });
