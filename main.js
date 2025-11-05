@@ -1,6 +1,3 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.156.1/build/three.module.js";
-import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.156.1/examples/jsm/loaders/GLTFLoader.js";
-
 // Sélecteurs
 const viewer = document.getElementById("viewer");
 const canvas = document.getElementById("drawCanvas");
@@ -8,16 +5,11 @@ const ctx = canvas.getContext("2d");
 
 // Création de la scène
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  60,
-  viewer.clientWidth / viewer.clientHeight,
-  0.1,
-  1000
-);
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.z = 5;
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setSize(viewer.clientWidth, viewer.clientHeight);
+renderer.setSize(window.innerWidth, window.innerHeight);
 viewer.appendChild(renderer.domElement);
 
 // Lumière
@@ -26,7 +18,7 @@ scene.add(light);
 
 // Chargement du modèle
 let mixer;
-const loader = new GLTFLoader();
+const loader = new THREE.GLTFLoader();
 loader.load(
   "assets/lion.glb",
   (gltf) => {
@@ -52,11 +44,9 @@ animate();
 document.getElementById("photoBtn").addEventListener("click", () => {
   alert("📸 Fonction photo à venir !");
 });
-
 document.getElementById("fileBtn").addEventListener("click", () => {
   alert("🖼️ Import d'image à venir !");
 });
-
 document.getElementById("drawBtn").addEventListener("click", startDrawing);
 
 // 🖌️ Dessin sur canvas
@@ -67,7 +57,7 @@ function startDrawing() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   ctx.lineWidth = 5;
-  ctx.strokeStyle = "#000000";
+  ctx.strokeStyle = "#000";
   ctx.lineCap = "round";
 }
 
@@ -83,6 +73,4 @@ canvas.addEventListener("pointermove", (e) => {
   ctx.stroke();
 });
 
-canvas.addEventListener("pointerup", () => {
-  drawing = false;
-});
+canvas.addEventListener("pointerup", () => (drawing = false));
